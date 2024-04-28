@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:udemy_006_shopping_list_app/data/categories.dart';
+import 'package:udemy_006_shopping_list_app/enums.dart';
 
 class NewItemScreen extends StatefulWidget {
   const NewItemScreen({super.key});
@@ -10,9 +11,17 @@ class NewItemScreen extends StatefulWidget {
 
 class _NewItemScreenState extends State<NewItemScreen> {
   final _formKey = GlobalKey<FormState>();
+  var _enteredName = '';
+  var _enteredQuantity = 1;
+  var _selectedCategory = categories[Categories.vegetables]!;
 
   void _saveItem() {
-    _formKey.currentState!.validate();
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      print(_enteredName);
+      print(_enteredQuantity);
+      print(_selectedCategory);
+    }
   }
 
   @override
@@ -41,6 +50,11 @@ class _NewItemScreenState extends State<NewItemScreen> {
                   }
                   return null;
                 },
+                onSaved: (value) {
+                  setState(() {
+                    _enteredName = value!;
+                  });
+                },
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -61,6 +75,11 @@ class _NewItemScreenState extends State<NewItemScreen> {
                         }
                         return null;
                       },
+                      onSaved: (value) {
+                        setState(() {
+                          _enteredQuantity = int.parse(value!);
+                        });
+                      },
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -69,7 +88,7 @@ class _NewItemScreenState extends State<NewItemScreen> {
                       items: [
                         for (final category in categories.entries)
                           DropdownMenuItem(
-                            value: category.value,
+                            value: _selectedCategory,
                             child: Row(
                               children: [
                                 Container(
@@ -83,7 +102,11 @@ class _NewItemScreenState extends State<NewItemScreen> {
                             ),
                           ),
                       ],
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedCategory = value!;
+                        });
+                      },
                     ),
                   ),
                 ],
