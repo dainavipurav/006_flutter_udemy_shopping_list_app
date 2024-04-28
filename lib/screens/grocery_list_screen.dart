@@ -37,6 +37,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Widget build(BuildContext context) {
     Widget content = GroceryList(
       groceryItems: _groceryItems,
+      onDismissed: onDismissed,
     );
 
     if (_groceryItems.isEmpty) {
@@ -59,6 +60,62 @@ class _CategoryScreenState extends State<CategoryScreen> {
         ],
       ),
       body: content,
+    );
+  }
+
+  Future<void> onDismissed(groceryItem) async {
+    await showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: const Text('Delete Item'),
+          content: const Text(
+            'Are you sure you want to delete this grocery item?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                int index = _groceryItems.indexOf(groceryItem);
+                Navigator.of(ctx).pop();
+                setState(() {
+                  _groceryItems.remove(groceryItem);
+                  _groceryItems.insert(index, groceryItem);
+                });
+              },
+              child: const Text('No'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+
+                int index = _groceryItems.indexOf(groceryItem);
+
+                setState(() {
+                  _groceryItems.remove(groceryItem);
+                });
+
+                ScaffoldMessenger.of(context).clearSnackBars();
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text('Item delete successfully'),
+                    action: SnackBarAction(
+                      label: 'Undo',
+                      onPressed: () {
+                        setState(() {
+                          _groceryItems.remove(groceryItem);
+                          _groceryItems.insert(index, groceryItem);
+                        });
+                      },
+                    ),
+                  ),
+                );
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
