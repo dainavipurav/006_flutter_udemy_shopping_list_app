@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:udemy_006_shopping_list_app/models/grocery_item.dart';
 import 'package:udemy_006_shopping_list_app/screens/new_item_screen.dart';
 
 import '../widgets/grocery_list.dart';
@@ -11,8 +12,10 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
-  void _addNewItem() {
-    Navigator.push(
+  final List<GroceryItem> _groceryItems = [];
+
+  void _addNewItem() async {
+    final newItem = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) {
@@ -20,10 +23,31 @@ class _CategoryScreenState extends State<CategoryScreen> {
         },
       ),
     );
+
+    if (newItem == null) {
+      return;
+    }
+
+    setState(() {
+      _groceryItems.add(newItem);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    Widget content = GroceryList(
+      groceryItems: _groceryItems,
+    );
+
+    if (_groceryItems.isEmpty) {
+      content = const Center(
+        child: Text(
+          'You got no items yet!',
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Groceries'),
@@ -34,7 +58,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           ),
         ],
       ),
-      body: const GroceryList(),
+      body: content,
     );
   }
 }
