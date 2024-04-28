@@ -51,6 +51,7 @@ class _NewItemScreenState extends State<NewItemScreen> {
                         label: Text('Quantity'),
                       ),
                       initialValue: '1',
+                      keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value == null ||
                             value.isEmpty ||
