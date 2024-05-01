@@ -98,7 +98,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: const Text('Item delete successfully'),
+                    content: const Text('Item deleted successfully'),
                     action: SnackBarAction(
                       label: 'Undo',
                       onPressed: () {
